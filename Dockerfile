@@ -19,18 +19,15 @@ ENV DEBUG=False \
     DJANGO_ALLOWED_HOSTS=* \
     PYTHONUNBUFFERED=1
 
-# Create media directories
-RUN mkdir -p image_colorizer/media/uploads image_colorizer/media/colorized image_colorizer/media/masks
-
-# Collect static files
-WORKDIR /app/image_colorizer
-RUN python manage.py collectstatic --noinput
+# Skip collectstatic during build
+ENV DISABLE_COLLECTSTATIC=1
 
 # Expose port
 EXPOSE 8000
 
 # Run gunicorn
-CMD ["gunicorn", "--chdir", "/app/image_colorizer", "image_colorizer.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["sh", "-c", "cd image_colorizer && python manage.py collectstatic --noinput && gunicorn image_colorizer.wsgi:application --bind 0.0.0.0:8000"]
+EXPOSE 8000
 
 # Run gunicorn
-CMD ["sh", "-c", "cd image_colorizer && gunicorn image_colorizer.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["gunicorn", "--chdir", "/app/image_colorizer", "image_colorizer.wsgi:application", "--bind", "0.0.0.0:8000"]
