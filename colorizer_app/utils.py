@@ -3,7 +3,7 @@ import colorsys
 import io
 import cv2
 from PIL import Image, ImageOps, ImageFilter
-from rembg import remove, new_session
+# from rembg import remove, new_session
 
 # Create simpler color presets
 COLOR_PRESETS = {
