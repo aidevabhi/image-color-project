@@ -7,3 +7,4 @@ rembg
 scikit-image
 fpdf
 onxruntime
+gunicorn
