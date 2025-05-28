@@ -6,3 +6,4 @@ Pillow
 rembg
 scikit-image
 fpdf
+onxruntime
