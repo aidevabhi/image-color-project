@@ -3,7 +3,8 @@ services:
     name: image-colorizer
     runtime: python
     buildCommand: pip install -r image_colorizer/requirements.txt
-    startCommand: cd image_colorizer && gunicorn image_colorizer.wsgi:application
+    startCommand: gunicorn image_colorizer.wsgi:application
+
     envVars:
       - key: PYTHON_VERSION
         value: 3.11
