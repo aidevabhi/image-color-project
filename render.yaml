@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: image-colorizer
+    runtime: python
+    buildCommand: pip install -r image_colorizer/requirements.txt
+    startCommand: cd image_colorizer && gunicorn image_colorizer.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: DEBUG
+        value: False
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: .onrender.com
