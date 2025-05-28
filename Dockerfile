@@ -9,29 +9,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements.txt .
-
+COPY requirements.txt requirements.txt
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt gunicorn whitenoise
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
-COPY image_colorizer/ .
+COPY . .
 
 # Set environment variables
 ENV DEBUG=False \
     DJANGO_ALLOWED_HOSTS=* \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=image_colorizer.settings
+    DJANGO_SETTINGS_MODULE=image_colorizer.image_colorizer.settings
 
 # Create media directories
 RUN mkdir -p media/uploads media/colorized media/masks
 
 # Collect static files
-RUN python manage.py collectstatic --noinput
+RUN cd image_colorizer && python manage.py collectstatic --noinput
 
 # Expose port
 EXPOSE 8000
 
 # Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "image_colorizer.wsgi:application"]
+CMD ["sh", "-c", "cd image_colorizer && gunicorn image_colorizer.wsgi:application --bind 0.0.0.0:8000"]
